@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "NODE_ENV=development nodemon server/server.js",
 		"start": "NODE_ENV=production node server/server.js",
-		"build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+	"build": "npm install && npm install --prefix twiller && npm run build --prefix twiller"
 	},
 	"keywords": [],
 	"author": "",
