@@ -85,9 +85,9 @@ function App() {
               {/* Authenticated Routes */}
               <Route
                 path="/"
-                element={authUser ? <Navigate to="/home" /> : <Navigate to="/login" />}
+                element={authUser ? <Navigate to="/" /> : <Navigate to="/login" />}
               />
-              <Route path="/home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+              <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
        
               <Route path="/ls" element ={<PrivateRoute>   <LanguageSelector
         currentLanguage={currentLanguage}
