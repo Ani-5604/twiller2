@@ -338,36 +338,7 @@ app.get("/api/auth/validate-reset-token/:token", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-app.get('/', (req, res) => {
-    res.send(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-            <title>Twiller</title>
-        </head>
-        <body>
-            <h2 style="
-                color: #1DA1F2; 
-                font-family: 'Poppins', Arial, sans-serif; 
-                font-weight: 700; 
-                font-size: 24px; 
-                letter-spacing: -1px; 
-                text-align: center; 
-                display: inline-block; 
-                padding-left: 10px;
-                margin: 0;
-                line-height: 1.2;
-                text-transform: lowercase;
-            ">
-                twiller
-            </h2>
-        </body>
-        </html>
-    `);
-});
+
 // Forgot password (send email with reset token)
 app.post("/api/auth/forgot-password", async (req, res) => {
   const { email } = req.body;
