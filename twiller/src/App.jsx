@@ -16,11 +16,9 @@ import Message from "./pages/Messages/Messages";
 import Explore from "./pages/Explore/Explore";
 import More from "./pages/more/More";
 import PrivateRoute from "./components/PrivateRoutes";
+
 import { QueryClient } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
-import { UserAuthContextProvider } from "./pages/context/UserAuthContext"; // Wrap context correctly
-import LanguageSelector from "./components/LanguageSelector";
-import ResetPasswordPage from "./pages/auth/login/ResetPassword";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,13 +29,28 @@ const queryClient = new QueryClient({
   },
 });
 
+import { UserAuthContextProvider } from "./pages/context/UserAuthContext"; // Wrap context correctly
+import LanguageSelector from "./components/LanguageSelector";
+import ResetPasswordPage from "./pages/auth/login/ResetPassword";
+
+
 function App() {
   const { data: authUser, isLoading } = useQuery({
     queryKey: ["authUser"],
     queryFn: async () => {
-      const res = await fetch("/api/auth/me");
-      const data = await res.json();
-      return res.ok ? data : null;
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (data.error) return null;
+        if (!res.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+        console.log("authUser is here:", data);
+        return data;
+      } catch (error) {
+        console.error("Error fetching authUser:", error);
+        return null;
+      }
     },
     retry: false,
   });
@@ -50,38 +63,49 @@ function App() {
       </div>
     );
   }
-
   const currentLanguage = "en"; // Default language, you can fetch this dynamically if needed
 
   const handleLanguageChange = (newLanguage) => {
     console.log("Selected Language:", newLanguage);
   };
-
   return (
     <QueryClientProvider client={queryClient}>
+	
       <UserAuthContextProvider>
+  
         <div className="flex max-w-6xl mx-auto">
+   
           {/* Sidebar for authenticated users */}
           {authUser && <Sidebar />}
-          
+       
           {/* Main App Content */}
           <div className="flex-grow">
-            <ThemeSwitcher />
+          <ThemeSwitcher/>
             <Routes>
               {/* Authenticated Routes */}
-              <Route path="/" element={authUser ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+              <Route
+                path="/"
+                element={authUser ? <Navigate to="/home" /> : <Navigate to="/login" />}
+              />
               <Route path="/home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
-              <Route path="/ls" element={<LanguageSelector currentLanguage={currentLanguage} onLanguageChange={handleLanguageChange} />} />
-              <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/home" />} />
-              <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/home" />} />
-              <Route path="/notifications" element={<PrivateRoute><NotificationPage /></PrivateRoute>} />
-              <Route path="/profile/:username" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+       
+              <Route path="/ls" element ={<PrivateRoute>   <LanguageSelector
+        currentLanguage={currentLanguage}
+        onLanguageChange={handleLanguageChange}
+      /></PrivateRoute>}/>
+            
+              <Route path='/' element={authUser ? <HomePage /> : <Navigate to='/login' />} />
+				<Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to='/' />} />
+				<Route path='/signup' element={!authUser ? <SignUpPage /> : <Navigate to='/' />} />
+				<Route path='/notifications' element={authUser ? <NotificationPage /> : <Navigate to='/login' />} />
+				<Route path='/profile/:username' element={authUser ? <ProfilePage /> : <Navigate to='/login' />} />
               <Route path="/bookmarks" element={<PrivateRoute><Bookmark /></PrivateRoute>} />
               <Route path="/lists" element={<PrivateRoute><List /></PrivateRoute>} />
               <Route path="/messages" element={<PrivateRoute><Message /></PrivateRoute>} />
               <Route path="/explore" element={<PrivateRoute><Explore /></PrivateRoute>} />
               <Route path="/more" element={<PrivateRoute><More /></PrivateRoute>} />
-              <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+              <Route path="/reset-password/:token" element={<ResetPasswordPage/>} />
+
             </Routes>
           </div>
 
