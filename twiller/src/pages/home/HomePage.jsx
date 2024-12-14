@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
+
 import Posts from "../../components/common/Posts";
 import CreatePost from "./CreatePost";
 import Widgets from "../Widgets/Widgets";
 
 const HomePage = () => {
   const [feedType, setFeedType] = useState("forYou");
-  const { t } = useTranslation(); // Initialize the translation hook
+
 
   return (
     <>
