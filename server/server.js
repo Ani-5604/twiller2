@@ -68,7 +68,7 @@ app.use(cors()); // Enable CORS
 app.use(express.json({ limit: "500mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Rate limiting for API routes
 const apiLimiter = rateLimit({
@@ -528,7 +528,7 @@ app.delete('/api/posts/:postId/comments/:commentId', async (req, res) => {
   }
 });
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV ==="production") {
 	app.use(express.static(path.join(__dirname, "/twiller/dist")));
 
 	app.get("*", (req, res) => {
