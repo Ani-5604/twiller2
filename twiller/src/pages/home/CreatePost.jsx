@@ -31,7 +31,10 @@ const CreatePost = () => {
   const imgRef = useRef(null);
   const audioRef = useRef(null);
   const videoRef = useRef(null);
-  
+    const tapsRef = useRef(0); // Keeps track of taps
+const tapTimeoutRef = useRef(null); // Holds the timeout ID
+const [tweetText, setTweetText] = useState(''); // Define state for tweet text
+const mediaRecorderRef = useRef(null); // Define ref for media recorder
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
   const queryClient = useQueryClient();
   const [media, setMedia] = useState({ img: null, audio: null, video: null });
